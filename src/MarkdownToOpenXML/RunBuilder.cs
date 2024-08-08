@@ -5,52 +5,52 @@ namespace MarkdownToOpenXML;
 
 internal class RunBuilder
 {
-    private readonly PatternMatcher Bold;
-    private readonly PatternMatcher Hyperlinks;
-    private readonly PatternMatcher Hyperlinks_Text;
-    private readonly PatternMatcher Italic;
-    private readonly string md;
-    public Paragraph para;
-    private Run run = null!;
-    private readonly PatternMatcher Tab;
+    private readonly PatternMatcher _bold;
+    private readonly PatternMatcher _hyperlinks;
+    private readonly PatternMatcher _hyperlinksText;
+    private readonly PatternMatcher _italic;
+    private readonly string _md;
+    public readonly Paragraph Para;
+    private Run _run = null!;
+    private readonly PatternMatcher _tab;
 
-    private readonly Ranges<int> Tokens = new Ranges<int>();
-    private readonly PatternMatcher? Underline;
+    private readonly Ranges<int> _tokens = new();
+    private readonly PatternMatcher? _underline;
 
     public RunBuilder(string md, Paragraph para)
     {
-        this.para = para;
-        this.md = md;
+        this.Para = para;
+        this._md = md;
 
-        PatternMatcher.Pattern it = MD2OXML.ExtendedMode ? PatternMatcher.Pattern.Grave : PatternMatcher.Pattern.Asterisk;
-        Italic = new PatternMatcher(it);
-        Italic.FindMatches(md, ref Tokens);
+        PatternMatcher.Pattern it = MarkdownToOpenXml.ExtendedMode ? PatternMatcher.Pattern.Grave : PatternMatcher.Pattern.Asterisk;
+        _italic = new PatternMatcher(it);
+        _italic.FindMatches(md, ref _tokens);
 
-        Bold = new PatternMatcher(PatternMatcher.Pattern.DblAsterisk);
-        Bold.FindMatches(md, ref Tokens);
+        _bold = new PatternMatcher(PatternMatcher.Pattern.DblAsterisk);
+        _bold.FindMatches(md, ref _tokens);
 
-        if (MD2OXML.ExtendedMode)
+        if (MarkdownToOpenXml.ExtendedMode)
         {
-            Underline = new PatternMatcher(PatternMatcher.Pattern.Underscore);
-            Underline.FindMatches(md, ref Tokens);
+            _underline = new PatternMatcher(PatternMatcher.Pattern.Underscore);
+            _underline.FindMatches(md, ref _tokens);
         }
 
-        Tab = new PatternMatcher(PatternMatcher.Pattern.Tab);
-        Tab.FindMatches(md, ref Tokens);
+        _tab = new PatternMatcher(PatternMatcher.Pattern.Tab);
+        _tab.FindMatches(md, ref _tokens);
 
-        Hyperlinks = new PatternMatcher(PatternMatcher.Pattern.Hyperlink);
-        Hyperlinks.FindMatches(md, ref Tokens);
+        _hyperlinks = new PatternMatcher(PatternMatcher.Pattern.Hyperlink);
+        _hyperlinks.FindMatches(md, ref _tokens);
 
-        Hyperlinks_Text = new PatternMatcher(PatternMatcher.Pattern.Hyperlink_Text);
-        Hyperlinks_Text.FindMatches(md, ref Tokens);
+        _hyperlinksText = new PatternMatcher(PatternMatcher.Pattern.HyperlinkText);
+        _hyperlinksText.FindMatches(md, ref _tokens);
 
         GenerateRuns();
     }
 
     private bool PatternsHaveMatches()
     {
-        return Bold.HasMatches() || Italic.HasMatches() || (Underline != null && Underline.HasMatches()) || Hyperlinks.HasMatches() ||
-               Hyperlinks_Text.HasMatches() || Tab.HasMatches();
+        return _bold.HasMatches() || _italic.HasMatches() || (_underline != null && _underline.HasMatches()) || _hyperlinks.HasMatches() ||
+               _hyperlinksText.HasMatches() || _tab.HasMatches();
     }
 
     private void GenerateRuns()
@@ -61,55 +61,55 @@ internal class RunBuilder
 
         if (!PatternsHaveMatches())
         {
-            run = new Run();
-            run.Append(new Text(md) { Space = SpaceProcessingModeValues.Preserve });
-            para.Append(run);
+            _run = new Run();
+            _run.Append(new Text(_md) { Space = SpaceProcessingModeValues.Preserve });
+            Para.Append(_run);
         }
         else
         {
             int pos = 0;
             string buffer = "";
 
-            // This needs optimizing so it builds a string buffer before adding the run itself
-            while (pos < md.Length)
+            // This needs optimizing, so it builds a string buffer before adding the run itself
+            while (pos < _md.Length)
             {
-                if (!Tokens.ContainsValue(pos))
+                if (!_tokens.ContainsValue(pos))
                 {
-                    buffer += md.Substring(pos, 1);
+                    buffer += _md.Substring(pos, 1);
                 }
                 else if (buffer.Length > 0)
                 {
-                    run = new Run();
-                    RunProperties rPr = new RunProperties();
+                    _run = new Run();
+                    RunProperties rPr = new();
 
-                    Bold.SetFlagFor(pos - 1);
-                    Italic.SetFlagFor(pos - 1);
-                    Underline?.SetFlagFor(pos - 1);
+                    _bold.SetFlagFor(pos - 1);
+                    _italic.SetFlagFor(pos - 1);
+                    _underline?.SetFlagFor(pos - 1);
 
-                    if (Bold.Flag)
+                    if (_bold.Flag)
                     {
                         rPr.Append(new Bold { Val = new OnOffValue(true) });
                     }
 
-                    if (Italic.Flag)
+                    if (_italic.Flag)
                     {
                         rPr.Append(new Italic());
                     }
 
-                    if (Underline?.Flag ?? false)
+                    if (_underline?.Flag ?? false)
                     {
                         rPr.Append(new Underline { Val = UnderlineValues.Single });
                     }
 
-                    run.Append(rPr);
-                    run.Append(new Text(buffer) { Space = SpaceProcessingModeValues.Preserve });
+                    _run.Append(rPr);
+                    _run.Append(new Text(buffer) { Space = SpaceProcessingModeValues.Preserve });
 
-                    if (Tab.ContainsValue(pos))
+                    if (_tab.ContainsValue(pos))
                     {
-                        run.Append(new TabChar());
+                        _run.Append(new TabChar());
                     }
 
-                    para.Append(run);
+                    Para.Append(_run);
                     buffer = "";
                 }
 

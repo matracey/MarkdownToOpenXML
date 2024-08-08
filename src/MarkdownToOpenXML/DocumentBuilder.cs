@@ -6,48 +6,46 @@ namespace MarkdownToOpenXML;
 
 public class DocumentBuilder
 {
-    private readonly Document document;
+    private readonly Document _document;
 
     public DocumentBuilder(Body body)
     {
-        document = new Document();
-        document.AppendChild(body);
+        _document = new Document();
+        _document.AppendChild(body);
     }
 
     public void SaveTo(string path)
     {
-        using (WordprocessingDocument package = WordprocessingDocument.Create(path, WordprocessingDocumentType.Document))
+        using WordprocessingDocument package = WordprocessingDocument.Create(path, WordprocessingDocumentType.Document);
+        package.AddMainDocumentPart();
+        if (package.MainDocumentPart == null)
         {
-            package.AddMainDocumentPart();
-            if (package.MainDocumentPart == null)
-            {
-                return;
-            }
-
-            package.MainDocumentPart.Document = document;
-
-            StyleDefinitionsPart styleDefinitionsPart1 = package.MainDocumentPart.AddNewPart<StyleDefinitionsPart>("rId1");
-            GenerateStyleDefinitionsPart1Content(styleDefinitionsPart1);
-
-            package.MainDocumentPart.Document.Save();
+            return;
         }
+
+        package.MainDocumentPart.Document = _document;
+
+        StyleDefinitionsPart styleDefinitionsPart1 = package.MainDocumentPart.AddNewPart<StyleDefinitionsPart>("rId1");
+        GenerateStyleDefinitionsPart1Content(styleDefinitionsPart1);
+
+        package.MainDocumentPart.Document.Save();
     }
 
     private void GenerateStyleDefinitionsPart1Content(StyleDefinitionsPart part)
     {
-        Styles doc_styles = GenerateDocumentStyles();
-        DocDefaults document_defaults = new DocDefaults();
-        RunPropertiesDefault defaultRunProperties = new RunPropertiesDefault(CreateRunBaseStyle());
-        document_defaults.Append(defaultRunProperties);
+        Styles docStyles = GenerateDocumentStyles();
+        DocDefaults documentDefaults = new();
+        RunPropertiesDefault defaultRunProperties = new(CreateRunBaseStyle());
+        documentDefaults.Append(defaultRunProperties);
 
-        ParagraphPropertiesBaseStyle paragraphBaseStyle = new ParagraphPropertiesBaseStyle();
+        ParagraphPropertiesBaseStyle paragraphBaseStyle = new();
         paragraphBaseStyle.Append(new SpacingBetweenLines { After = "200", Line = "276", LineRule = LineSpacingRuleValues.Auto });
 
-        ParagraphPropertiesDefault default_ParagraphProperties = new ParagraphPropertiesDefault();
-        default_ParagraphProperties.Append(paragraphBaseStyle);
-        document_defaults.Append(default_ParagraphProperties);
+        ParagraphPropertiesDefault defaultParagraphProperties = new();
+        defaultParagraphProperties.Append(paragraphBaseStyle);
+        documentDefaults.Append(defaultParagraphProperties);
 
-        LatentStyles latentStyles1 = new LatentStyles
+        LatentStyles latentStyles1 = new()
         {
             DefaultLockedState = false,
             DefaultUiPriority = 99,
@@ -66,11 +64,11 @@ public class DocumentBuilder
                 UnhideWhenUsed = false,
                 PrimaryStyle = true
             });
-        Style Normal = GenerateNormal();
+        Style normal = GenerateNormal();
 
-        doc_styles.Append(document_defaults);
-        doc_styles.Append(latentStyles1);
-        doc_styles.Append(Normal);
+        docStyles.Append(documentDefaults);
+        docStyles.Append(latentStyles1);
+        docStyles.Append(normal);
 
         for (int i = 1; i <= 7; i++)
         {
@@ -83,20 +81,19 @@ public class DocumentBuilder
                     UnhideWhenUsed = false,
                     PrimaryStyle = true
                 });
-            Style Header = GenerateHeader(i);
+            Style header = GenerateHeader(i);
 
-            doc_styles.Append(Header);
+            docStyles.Append(header);
         }
 
-        part.Styles = doc_styles;
+        part.Styles = docStyles;
     }
 
-    private RunPropertiesBaseStyle CreateRunBaseStyle()
+    private static RunPropertiesBaseStyle CreateRunBaseStyle()
     {
-        RunPropertiesBaseStyle runBaseStyle = new RunPropertiesBaseStyle();
+        RunPropertiesBaseStyle runBaseStyle = new();
 
-        RunFonts font = new RunFonts();
-        font.Ascii = "Arial";
+        RunFonts font = new() { Ascii = "Arial" };
         runBaseStyle.Append(font);
         runBaseStyle.Append(new FontSize { Val = "20" });
         runBaseStyle.Append(new FontSizeComplexScript { Val = "20" });
@@ -105,55 +102,54 @@ public class DocumentBuilder
         return runBaseStyle;
     }
 
-    private Styles GenerateDocumentStyles()
+    private static Styles GenerateDocumentStyles()
     {
-        Styles doc_styles = new Styles { MCAttributes = new MarkupCompatibilityAttributes { Ignorable = "w14" } };
-        doc_styles.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
-        doc_styles.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
-        doc_styles.AddNamespaceDeclaration("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
-        doc_styles.AddNamespaceDeclaration("w14", "http://schemas.microsoft.com/office/word/2010/wordml");
-        return doc_styles;
+        Styles docStyles = new() { MCAttributes = new MarkupCompatibilityAttributes { Ignorable = "w14" } };
+        docStyles.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
+        docStyles.AddNamespaceDeclaration("r", "http://schemas.openxmlformats.org/officeDocument/2006/relationships");
+        docStyles.AddNamespaceDeclaration("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+        docStyles.AddNamespaceDeclaration("w14", "http://schemas.microsoft.com/office/word/2010/wordml");
+        return docStyles;
     }
 
-    private Style GenerateNormal()
+    private static Style GenerateNormal()
     {
-        Style Style_Normal = new Style { Type = StyleValues.Paragraph, StyleId = "Normal", Default = true };
-        Style_Normal.Append(new StyleName { Val = "Normal" });
-        Style_Normal.Append(new PrimaryStyle());
+        Style styleNormal = new() { Type = StyleValues.Paragraph, StyleId = "Normal", Default = true };
+        styleNormal.Append(new StyleName { Val = "Normal" });
+        styleNormal.Append(new PrimaryStyle());
 
-        return Style_Normal;
+        return styleNormal;
     }
 
-    private Style GenerateHeader(int id)
+    private static Style GenerateHeader(int id)
     {
-        Style Style_Header1 = new Style { Type = StyleValues.Paragraph, StyleId = "Heading" + id };
+        Style styleHeader1 = new() { Type = StyleValues.Paragraph, StyleId = "Heading" + id };
 
-        StyleParagraphProperties ParagraphProperties_Header = new StyleParagraphProperties();
-        ParagraphProperties_Header.Append(new KeepNext());
-        ParagraphProperties_Header.Append(new KeepLines());
-        ParagraphProperties_Header.Append(new SpacingBetweenLines { Before = "480", After = "0" });
-        ParagraphProperties_Header.Append(new OutlineLevel { Val = 0 });
-        Style_Header1.Append(ParagraphProperties_Header);
+        StyleParagraphProperties paragraphPropertiesHeader = new();
+        paragraphPropertiesHeader.Append(new KeepNext());
+        paragraphPropertiesHeader.Append(new KeepLines());
+        paragraphPropertiesHeader.Append(new SpacingBetweenLines { Before = "480", After = "0" });
+        paragraphPropertiesHeader.Append(new OutlineLevel { Val = 0 });
+        styleHeader1.Append(paragraphPropertiesHeader);
 
-        StyleRunProperties RunProperties_Header = new StyleRunProperties();
-        RunFonts font = new RunFonts();
-        font.Ascii = "Arial";
-        RunProperties_Header.Append(font);
-        RunProperties_Header.Append(new Bold());
-        RunProperties_Header.Append(new BoldComplexScript());
+        StyleRunProperties runPropertiesHeader = new();
+        RunFonts font = new() { Ascii = "Arial" };
+        runPropertiesHeader.Append(font);
+        runPropertiesHeader.Append(new Bold());
+        runPropertiesHeader.Append(new BoldComplexScript());
         string size = (26 - (id * 2)).ToString();
-        RunProperties_Header.Append(new FontSize { Val = size });
-        RunProperties_Header.Append(new FontSizeComplexScript { Val = size });
-        Style_Header1.Append(RunProperties_Header);
+        runPropertiesHeader.Append(new FontSize { Val = size });
+        runPropertiesHeader.Append(new FontSizeComplexScript { Val = size });
+        styleHeader1.Append(runPropertiesHeader);
 
-        Style_Header1.Append(new StyleName { Val = "Heading " + id });
-        Style_Header1.Append(new BasedOn { Val = "Normal" });
-        Style_Header1.Append(new NextParagraphStyle { Val = "Normal" });
-        Style_Header1.Append(new LinkedStyle { Val = "Heading" + id + "Char" });
-        Style_Header1.Append(new UIPriority { Val = 9 });
-        Style_Header1.Append(new PrimaryStyle());
-        Style_Header1.Append(new Rsid { Val = "00AF6F24" });
+        styleHeader1.Append(new StyleName { Val = "Heading " + id });
+        styleHeader1.Append(new BasedOn { Val = "Normal" });
+        styleHeader1.Append(new NextParagraphStyle { Val = "Normal" });
+        styleHeader1.Append(new LinkedStyle { Val = "Heading" + id + "Char" });
+        styleHeader1.Append(new UIPriority { Val = 9 });
+        styleHeader1.Append(new PrimaryStyle());
+        styleHeader1.Append(new Rsid { Val = "00AF6F24" });
 
-        return Style_Header1;
+        return styleHeader1;
     }
 }

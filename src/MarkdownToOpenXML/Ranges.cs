@@ -2,28 +2,20 @@
 
 public class Ranges<T> where T : IComparable<T>
 {
-    private readonly List<Range<T>> rangelist = new List<Range<T>>();
+    private readonly List<Range<T>> _rangeList = new();
 
-    public void add(Range<T> range)
+    public void Add(Range<T> range)
     {
-        rangelist.Add(range);
+        _rangeList.Add(range);
     }
 
     public int Count()
     {
-        return rangelist.Count;
+        return _rangeList.Count;
     }
 
     public Boolean ContainsValue(T value)
     {
-        foreach (Range<T> range in rangelist)
-        {
-            if (range.ContainsValue(value))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return _rangeList.Any(range => range.ContainsValue(value));
     }
 }

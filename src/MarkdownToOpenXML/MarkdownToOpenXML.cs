@@ -2,68 +2,64 @@
 
 namespace MarkdownToOpenXML;
 
-public class MD2OXML
+public class MarkdownToOpenXml
 {
-    public static bool ExtendedMode = true;
-    private int lineCount;
-    private string[] lines = Array.Empty<string>();
-    private readonly string md;
-    private readonly string path;
+    public static bool ExtendedMode { get; set; } = true;
 
-    private bool SkipNextLine;
+    private int _lineCount;
 
-    public MD2OXML(string md, string path)
+    private string[] _lines = Array.Empty<string>();
+    private readonly string _md;
+    private readonly string _path;
+
+    private bool _skipNextLine;
+
+    public MarkdownToOpenXml(string md, string path)
     {
-        this.md = md;
-        this.path = path;
+        this._md = md;
+        this._path = path;
     }
 
     public static void CreateDocX(string md, string path)
     {
-        MD2OXML inst = new MD2OXML(md, path);
-        inst.run();
+        MarkdownToOpenXml inst = new(md, path);
+        inst.Run();
     }
 
-    public void run()
+    public void Run()
     {
-        Body body = new Body();
+        Body body = new();
         int index = 0;
 
-        lines = md.Split(
-            new[]
-            {
-                    "\r\n",
-                    "\n"
-            },
-            StringSplitOptions.None);
-        lineCount = lines.Length;
+        _lines = _md.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+        _lineCount = _lines.Length;
 
-        foreach (string line in lines)
+        foreach (string line in _lines)
         {
-            if (SkipNextLine)
+            if (_skipNextLine)
             {
                 index += 1;
-                SkipNextLine = !SkipNextLine;
+                _skipNextLine = !_skipNextLine;
                 continue;
             }
 
-            ParagraphBuilder paragraph = new ParagraphBuilder(line, GetLine(index + 1));
-            SkipNextLine = paragraph.SkipNextLine;
+            ParagraphBuilder paragraph = new(line, GetLine(index + 1));
+            _skipNextLine = paragraph.SkipNextLine;
             body.Append(paragraph.Build());
             index += 1;
         }
 
-        DocumentBuilder file = new DocumentBuilder(body);
-        file.SaveTo(path);
+        DocumentBuilder file = new(body);
+        file.SaveTo(_path);
     }
 
     private string GetLine(int n)
     {
-        return inRange(n) ? lines[n] : "";
+        return InRange(n) ? _lines[n] : "";
     }
 
-    private bool inRange(int n)
+    private bool InRange(int n)
     {
-        return n >= 0 && n < lineCount;
+        return n >= 0 && n < _lineCount;
     }
 }

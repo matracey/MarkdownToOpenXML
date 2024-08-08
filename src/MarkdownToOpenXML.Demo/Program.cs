@@ -17,7 +17,7 @@ var markdown = File.ReadAllText(demoInputPath);
 
 // Process markdown and write to output file
 Console.WriteLine($"Writing to {demoOutputPath}...");
-MD2OXML.CreateDocX(markdown, demoOutputPath);
+MarkdownToOpenXml.CreateDocX(markdown, demoOutputPath);
 
 // Open the DOCX file using the default application
 Console.WriteLine("Opening the DOCX file...");
