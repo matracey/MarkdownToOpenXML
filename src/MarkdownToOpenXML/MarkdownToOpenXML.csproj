@@ -1,18 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>netstandard2.0</TargetFramework>
-
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>10</LangVersion>
     <RootNamespace>MarkdownToOpenXML</RootNamespace>
+
     <AssemblyName>MarkdownToOpenXML</AssemblyName>
+    <AssemblyTitle>MarkdownToOpenXML</AssemblyTitle>
+    <Description />
+    <Configuration />
+    <Company />
+    <Product>MarkdownToOpenXML</Product>
+    <Copyright>Copyright ©  2013</Copyright>
+    <Version>1.0.0.0</Version>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.5.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
