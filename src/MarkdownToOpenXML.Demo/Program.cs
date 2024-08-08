@@ -3,17 +3,8 @@ using System.IO;
 
 using MarkdownToOpenXML;
 
-namespace Test
-{
-    internal class Program
-    {
-        private static void Main()
-        {
-            string markdown = File.ReadAllText(@".\demo.txt");
-            string saveTo = @".\demo.docx";
+string markdown = File.ReadAllText(@".\demo.txt");
+string saveTo = @".\demo.docx";
 
-            MD2OXML.CreateDocX(markdown, saveTo);
-            Process.Start(saveTo);
-        }
-    }
-}
+MD2OXML.CreateDocX(markdown, saveTo);
+Process.Start(saveTo);
