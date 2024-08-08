@@ -53,41 +53,6 @@ namespace MarkdownToOpenXML
                    Hyperlinks_Text.HasMatches() || Tab.HasMatches();
         }
 
-        private void AppendHyperlink(string Buffer, ref Paragraph p, bool Description)
-        {
-            /*
-            Text text;
-            string path;
-
-            if (Description)
-            {
-                text = new Text(Buffer.Split(']')[0].Trim('['));
-
-                path = Buffer.Split('(')[1].Trim(')');
-            }
-            else
-            {
-                path = Buffer.TrimStart('<').TrimEnd('>').Trim();
-                text = new Text(path);
-            }
-
-            MainDocumentPart mainPart = package.MainDocumentPart;
-            HyperlinkRelationship rel = mainPart.AddHyperlinkRelationship(new System.Uri(path, System.UriKind.Absolute), true);
-            string relationshipId = rel.Id;
-            p.Append(
-                new Hyperlink(
-                    new ProofError() { Type = ProofingErrorValues.GrammarStart },
-                    new Run(
-                        new RunProperties(
-                            new Underline() { Val = UnderlineValues.Single },
-                            new Color() { Val = "0000FF" },
-                            new RunStyle() { Val = "Hyperlink" }),
-                        text
-                    )) { Id = relationshipId });
-
-             */
-        }
-
         private void GenerateRuns()
         {
             // Calculate positions of all tokens and use this to set 
@@ -152,8 +117,6 @@ namespace MarkdownToOpenXML
 
                     pos++;
                 }
-
-                ;
             }
         }
     }

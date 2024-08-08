@@ -13,14 +13,12 @@ namespace MarkdownToOpenXML
         private readonly string next;
 
         private readonly Paragraph para = new Paragraph();
-        private string prev;
         private readonly ParagraphProperties prop = new ParagraphProperties();
         public bool SkipNextLine;
 
-        public ParagraphBuilder(string current, string prev, string next)
+        public ParagraphBuilder(string current, string next)
         {
             this.current = current;
-            this.prev = prev;
             this.next = next;
         }
 
@@ -69,7 +67,6 @@ namespace MarkdownToOpenXML
             else
             {
                 String sTest = Regex.Replace(next, @"\w", "");
-                Match isSetextHeader1 = Regex.Match(sTest, @"[=]{2,}");
                 if (Regex.Match(sTest, @"[=]{2,}").Success)
                 {
                     headerLevel = 1;

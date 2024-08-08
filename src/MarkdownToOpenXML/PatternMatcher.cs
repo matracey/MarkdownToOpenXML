@@ -53,12 +53,9 @@ namespace MarkdownToOpenXML
             if (pattern == Pattern.DblAsterisk || pattern == Pattern.Asterisk || pattern == Pattern.Grave || pattern == Pattern.Underscore)
             {
                 MatchCollection mc = regex.Matches(md);
-                int num = 0;
 
                 foreach (Match m in mc)
                 {
-                    num++;
-
                     int sToken = m.Groups[1].Index;
                     int match = m.Groups[2].Index;
                     int eToken = m.Groups[3].Index;

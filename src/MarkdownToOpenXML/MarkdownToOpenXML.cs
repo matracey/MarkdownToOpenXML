@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -39,7 +38,7 @@ namespace MarkdownToOpenXML
                     "\n"
                 },
                 StringSplitOptions.None);
-            lineCount = lines.Count();
+            lineCount = lines.Length;
 
             foreach (string line in lines)
             {
@@ -50,7 +49,7 @@ namespace MarkdownToOpenXML
                     continue;
                 }
 
-                ParagraphBuilder paragraph = new ParagraphBuilder(line, GetLine(index - 1), GetLine(index + 1));
+                ParagraphBuilder paragraph = new ParagraphBuilder(line, GetLine(index + 1));
                 SkipNextLine = paragraph.SkipNextLine;
                 body.Append(paragraph.Build());
                 index += 1;
