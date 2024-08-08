@@ -13,8 +13,8 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            string markdown = File.ReadAllText(@".\test.txt");
-            string saveTo = @".\Test.docx";
+            string markdown = File.ReadAllText(@".\demo.txt");
+            string saveTo = @".\demo.docx";
             
             MD2OXML.CreateDocX(markdown, saveTo);
             Process.Start(saveTo);

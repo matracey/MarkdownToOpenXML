@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net481</TargetFramework>
 
-    <RootNamespace>Test</RootNamespace>
-    <AssemblyName>Test</AssemblyName>
+    <RootNamespace>MarkdownToOpenXML.Demo</RootNamespace>
+    <AssemblyName>MarkdownToOpenXML.Demo</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Test.txt" CopyToOutputDirectory="Always" />
+    <Content Include="demo.txt" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
