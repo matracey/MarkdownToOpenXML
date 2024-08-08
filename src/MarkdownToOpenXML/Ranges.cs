@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MarkdownToOpenXML;
+﻿namespace MarkdownToOpenXML;
 
 public class Ranges<T> where T : IComparable<T>
 {

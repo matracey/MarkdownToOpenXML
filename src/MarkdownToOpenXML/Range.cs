@@ -1,18 +1,16 @@
-﻿using System;
-
-namespace MarkdownToOpenXML;
+﻿namespace MarkdownToOpenXML;
 
 public class Range<T> where T : IComparable<T>
 {
-    public T Minimum { get; set; }
-    public T Maximum { get; set; }
+    public T? Minimum { get; set; }
+    public T? Maximum { get; set; }
 
-    public override string ToString() { return String.Format("[{0} - {1}]", Minimum, Maximum); }
+    public override string ToString() { return $"[{Minimum} - {Maximum}]"; }
 
-    public Boolean IsValid() { return Minimum.CompareTo(Maximum) <= 0; }
+    public Boolean IsValid() { return Minimum != null && Minimum.CompareTo(Maximum) <= 0; }
 
     public Boolean ContainsValue(T value)
     {
-        return Minimum.CompareTo(value) <= 0 && value.CompareTo(Maximum) <= 0;
+        return Minimum != null && Minimum.CompareTo(value) <= 0 && value.CompareTo(Maximum) <= 0;
     }
 }

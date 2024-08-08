@@ -1,6 +1,4 @@
-﻿using System;
-
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace MarkdownToOpenXML;
 
@@ -8,7 +6,7 @@ public class MD2OXML
 {
     public static bool ExtendedMode = true;
     private int lineCount;
-    private string[] lines;
+    private string[] lines = Array.Empty<string>();
     private readonly string md;
     private readonly string path;
 

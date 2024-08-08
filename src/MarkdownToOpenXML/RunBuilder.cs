@@ -11,11 +11,11 @@ internal class RunBuilder
     private readonly PatternMatcher Italic;
     private readonly string md;
     public Paragraph para;
-    private Run run;
+    private Run run = null!;
     private readonly PatternMatcher Tab;
 
     private readonly Ranges<int> Tokens = new Ranges<int>();
-    private readonly PatternMatcher Underline;
+    private readonly PatternMatcher? Underline;
 
     public RunBuilder(string md, Paragraph para)
     {
@@ -49,7 +49,7 @@ internal class RunBuilder
 
     private bool PatternsHaveMatches()
     {
-        return Bold.HasMatches() || Italic.HasMatches() || Underline.HasMatches() || Hyperlinks.HasMatches() ||
+        return Bold.HasMatches() || Italic.HasMatches() || (Underline != null && Underline.HasMatches()) || Hyperlinks.HasMatches() ||
                Hyperlinks_Text.HasMatches() || Tab.HasMatches();
     }
 
@@ -84,7 +84,7 @@ internal class RunBuilder
 
                     Bold.SetFlagFor(pos - 1);
                     Italic.SetFlagFor(pos - 1);
-                    Underline.SetFlagFor(pos - 1);
+                    Underline?.SetFlagFor(pos - 1);
 
                     if (Bold.Flag)
                     {
@@ -96,7 +96,7 @@ internal class RunBuilder
                         rPr.Append(new Italic());
                     }
 
-                    if (Underline.Flag)
+                    if (Underline?.Flag ?? false)
                     {
                         rPr.Append(new Underline { Val = UnderlineValues.Single });
                     }

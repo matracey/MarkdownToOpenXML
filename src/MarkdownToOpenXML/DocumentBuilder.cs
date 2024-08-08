@@ -19,6 +19,11 @@ public class DocumentBuilder
         using (WordprocessingDocument package = WordprocessingDocument.Create(path, WordprocessingDocumentType.Document))
         {
             package.AddMainDocumentPart();
+            if (package.MainDocumentPart == null)
+            {
+                return;
+            }
+
             package.MainDocumentPart.Document = document;
 
             StyleDefinitionsPart styleDefinitionsPart1 = package.MainDocumentPart.AddNewPart<StyleDefinitionsPart>("rId1");
