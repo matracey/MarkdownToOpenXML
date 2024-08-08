@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkdownToOpenXML.dll\MarkdownToOpenXML.dll.csproj" />
+    <ProjectReference Include="..\MarkdownToOpenXML\MarkdownToOpenXML.csproj" />
   </ItemGroup>
 
 </Project>
