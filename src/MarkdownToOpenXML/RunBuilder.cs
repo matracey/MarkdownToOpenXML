@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-using DocumentFormat.OpenXml;
+﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace MarkdownToOpenXML
 {
-    class RunBuilder
+    internal class RunBuilder
     {
-        private string md;
+        private readonly PatternMatcher Bold;
+        private readonly PatternMatcher Hyperlinks;
+        private readonly PatternMatcher Hyperlinks_Text;
+        private readonly PatternMatcher Italic;
+        private readonly string md;
         public Paragraph para;
         private Run run;
+        private readonly PatternMatcher Tab;
 
-        PatternMatcher Bold;
-        PatternMatcher Italic;
-        PatternMatcher Underline;
-        PatternMatcher Tab;
-        PatternMatcher Hyperlinks_Text;
-        PatternMatcher Hyperlinks;
-
-        Ranges<int> Tokens = new Ranges<int>();
+        private readonly Ranges<int> Tokens = new Ranges<int>();
+        private readonly PatternMatcher Underline;
 
         public RunBuilder(string md, Paragraph para)
         {
@@ -57,7 +49,8 @@ namespace MarkdownToOpenXML
 
         private bool PatternsHaveMatches()
         {
-            return (Bold.HasMatches() || Italic.HasMatches() || Underline.HasMatches() || Hyperlinks.HasMatches() || Hyperlinks_Text.HasMatches() || Tab.HasMatches());
+            return Bold.HasMatches() || Italic.HasMatches() || Underline.HasMatches() || Hyperlinks.HasMatches() ||
+                   Hyperlinks_Text.HasMatches() || Tab.HasMatches();
         }
 
         private void AppendHyperlink(string Buffer, ref Paragraph p, bool Description)
@@ -106,10 +99,7 @@ namespace MarkdownToOpenXML
             if (!PatternsHaveMatches())
             {
                 run = new Run();
-                run.Append(new Text(md)
-                {
-                    Space = SpaceProcessingModeValues.Preserve
-                });
+                run.Append(new Text(md) { Space = SpaceProcessingModeValues.Preserve });
                 para.Append(run);
             }
             else
@@ -135,7 +125,7 @@ namespace MarkdownToOpenXML
 
                         if (Bold.Flag)
                         {
-                            rPr.Append(new Bold() { Val = new OnOffValue(true) });
+                            rPr.Append(new Bold { Val = new OnOffValue(true) });
                         }
 
                         if (Italic.Flag)
@@ -145,14 +135,11 @@ namespace MarkdownToOpenXML
 
                         if (Underline.Flag)
                         {
-                            rPr.Append(new Underline() { Val = DocumentFormat.OpenXml.Wordprocessing.UnderlineValues.Single });
+                            rPr.Append(new Underline { Val = UnderlineValues.Single });
                         }
 
                         run.Append(rPr);
-                        run.Append(new Text(buffer)
-                        {
-                            Space = SpaceProcessingModeValues.Preserve
-                        });
+                        run.Append(new Text(buffer) { Space = SpaceProcessingModeValues.Preserve });
 
                         if (Tab.ContainsValue(pos))
                         {
@@ -164,7 +151,9 @@ namespace MarkdownToOpenXML
                     }
 
                     pos++;
-                };
+                }
+
+                ;
             }
         }
     }

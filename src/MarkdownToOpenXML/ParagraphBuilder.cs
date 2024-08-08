@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace MarkdownToOpenXML
 {
-    class ParagraphBuilder
+    internal class ParagraphBuilder
     {
-        string current;
-        string prev;
-        string next;
+        private string current;
+        private readonly string next;
 
-        Paragraph para = new Paragraph();
-        ParagraphProperties prop = new ParagraphProperties();
-        public bool SkipNextLine = false;
+        private readonly Paragraph para = new Paragraph();
+        private string prev;
+        private readonly ParagraphProperties prop = new ParagraphProperties();
+        public bool SkipNextLine;
 
         public ParagraphBuilder(string current, string prev, string next)
         {
@@ -53,7 +51,7 @@ namespace MarkdownToOpenXML
             {
                 if (match.Value.Success)
                 {
-                    prop.Append(new Justification() { Val = match.Key });
+                    prop.Append(new Justification { Val = match.Key });
                     current = current.Substring(2);
                     break;
                 }
@@ -62,7 +60,7 @@ namespace MarkdownToOpenXML
 
         private void DoHeaders()
         {
-            int headerLevel = current.TakeWhile((x) => x == '#').Count();
+            int headerLevel = current.TakeWhile(x => x == '#').Count();
 
             if (headerLevel > 0)
             {
@@ -77,6 +75,7 @@ namespace MarkdownToOpenXML
                     headerLevel = 1;
                     SkipNextLine = true;
                 }
+
                 if (Regex.Match(sTest, @"[-]{2,}").Success)
                 {
                     headerLevel = 2;
@@ -86,10 +85,7 @@ namespace MarkdownToOpenXML
 
             if (headerLevel > 0)
             {
-                prop.Append(new ParagraphStyleId()
-                {
-                    Val = "Heading" + headerLevel
-                });
+                prop.Append(new ParagraphStyleId { Val = "Heading" + headerLevel });
             }
         }
 
@@ -103,8 +99,8 @@ namespace MarkdownToOpenXML
                 // Doesnt work currently, needs NumberingDefinitions adding in filecreation.cs
                 current = current.Substring(2);
                 NumberingProperties nPr = new NumberingProperties(
-                    new NumberingLevelReference() { Val = 0 },
-                    new NumberingId() { Val = 1 }
+                    new NumberingLevelReference { Val = 0 },
+                    new NumberingId { Val = 1 }
                 );
 
                 prop.Append(nPr);

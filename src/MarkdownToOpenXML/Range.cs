@@ -1,8 +1,7 @@
-﻿
+﻿using System;
+
 namespace MarkdownToOpenXML
 {
-    using System;
-
     public class Range<T> where T : IComparable<T>
     {
         public T Minimum { get; set; }
@@ -14,7 +13,7 @@ namespace MarkdownToOpenXML
 
         public Boolean ContainsValue(T value)
         {
-            return (Minimum.CompareTo(value) <= 0) && (value.CompareTo(Maximum) <= 0);
+            return Minimum.CompareTo(value) <= 0 && value.CompareTo(Maximum) <= 0;
         }
     }
 }
