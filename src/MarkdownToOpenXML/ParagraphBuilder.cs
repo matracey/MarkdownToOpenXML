@@ -1,10 +1,11 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace MarkdownToOpenXML
 {
@@ -34,7 +35,7 @@ namespace MarkdownToOpenXML
 
             DoHeaders();
             DoNumberedLists();
-            
+
             para.Append(prop);
             RunBuilder run = new RunBuilder(current, para);
             return run.para;

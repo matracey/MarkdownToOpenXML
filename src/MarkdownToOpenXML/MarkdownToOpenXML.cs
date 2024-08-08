@@ -41,7 +41,7 @@ namespace MarkdownToOpenXML
         {
             Body body = new Body();
             int index = 0;
-            
+
             lines = md.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             lineCount = lines.Count();
 
@@ -73,6 +73,6 @@ namespace MarkdownToOpenXML
         {
             return (n >= 0 && n < lineCount);
         }
-        
+
     }
 }

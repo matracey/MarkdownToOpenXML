@@ -8,16 +8,16 @@ namespace MarkdownToOpenXML
     using System.Threading.Tasks;
 
     using DocumentFormat.OpenXml;
-    using DocumentFormat.OpenXml.Wordprocessing;
     using DocumentFormat.OpenXml.Packaging;
+    using DocumentFormat.OpenXml.Wordprocessing;
 
+    using A = DocumentFormat.OpenXml.Drawing;
     using Ap = DocumentFormat.OpenXml.ExtendedProperties;
+    using Clr = DocumentFormat.OpenXml.Wordprocessing.Color;
     using M = DocumentFormat.OpenXml.Math;
     using Ovml = DocumentFormat.OpenXml.Vml.Office;
-    using V = DocumentFormat.OpenXml.Vml;
-    using A = DocumentFormat.OpenXml.Drawing;
     using Sty = DocumentFormat.OpenXml.Wordprocessing.Style;
-    using Clr = DocumentFormat.OpenXml.Wordprocessing.Color;
+    using V = DocumentFormat.OpenXml.Vml;
 
     public class DocumentBuilder
     {
@@ -28,7 +28,7 @@ namespace MarkdownToOpenXML
             document = new Document();
             document.AppendChild(body);
         }
-        
+
         public void SaveTo(string path)
         {
             using (WordprocessingDocument package = WordprocessingDocument.Create(path, WordprocessingDocumentType.Document))
@@ -38,7 +38,7 @@ namespace MarkdownToOpenXML
 
                 StyleDefinitionsPart styleDefinitionsPart1 = package.MainDocumentPart.AddNewPart<StyleDefinitionsPart>("rId1");
                 GenerateStyleDefinitionsPart1Content(styleDefinitionsPart1);
-                
+
                 package.MainDocumentPart.Document.Save();
             }
         }
@@ -81,7 +81,7 @@ namespace MarkdownToOpenXML
                 PrimaryStyle = true
             });
             Style Normal = GenerateNormal();
-            
+
             doc_styles.Append(document_defaults);
             doc_styles.Append(latentStyles1);
             doc_styles.Append(Normal);
@@ -90,7 +90,7 @@ namespace MarkdownToOpenXML
             {
                 latentStyles1.Append(new LatentStyleExceptionInfo()
                 {
-                    Name = "Heading "+i,
+                    Name = "Heading " + i,
                     UiPriority = 9,
                     SemiHidden = false,
                     UnhideWhenUsed = false,
@@ -143,7 +143,7 @@ namespace MarkdownToOpenXML
             };
             Style_Normal.Append(new StyleName() { Val = "Normal" });
             Style_Normal.Append(new PrimaryStyle());
-            
+
             return Style_Normal;
         }
 

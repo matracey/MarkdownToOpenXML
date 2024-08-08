@@ -3,7 +3,7 @@ namespace MarkdownToOpenXML
 {
     using System;
     using System.Collections.Generic;
-    
+
     public class Ranges<T> where T : IComparable<T>
     {
         private List<Range<T>> rangelist = new List<Range<T>>();

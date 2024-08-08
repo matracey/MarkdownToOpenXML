@@ -5,8 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace MarkdownToOpenXML
 {
@@ -22,7 +22,7 @@ namespace MarkdownToOpenXML
         PatternMatcher Tab;
         PatternMatcher Hyperlinks_Text;
         PatternMatcher Hyperlinks;
-        
+
         Ranges<int> Tokens = new Ranges<int>();
 
         public RunBuilder(string md, Paragraph para)
@@ -42,7 +42,7 @@ namespace MarkdownToOpenXML
                 Underline = new PatternMatcher(PatternMatcher.Pattern.Underscore);
                 Underline.FindMatches(md, ref Tokens);
             }
-            
+
             Tab = new PatternMatcher(PatternMatcher.Pattern.Tab);
             Tab.FindMatches(md, ref Tokens);
 
@@ -54,10 +54,10 @@ namespace MarkdownToOpenXML
 
             GenerateRuns();
         }
-        
+
         private bool PatternsHaveMatches()
         {
-            return (Bold.HasMatches() || Italic.HasMatches() || Underline.HasMatches() || Hyperlinks.HasMatches() || Hyperlinks_Text.HasMatches() || Tab.HasMatches());  
+            return (Bold.HasMatches() || Italic.HasMatches() || Underline.HasMatches() || Hyperlinks.HasMatches() || Hyperlinks_Text.HasMatches() || Tab.HasMatches());
         }
 
         private void AppendHyperlink(string Buffer, ref Paragraph p, bool Description)
@@ -115,8 +115,8 @@ namespace MarkdownToOpenXML
             else
             {
                 int pos = 0;
-                string buffer = ""; 
-                
+                string buffer = "";
+
                 // This needs optimizing so it builds a string buffer before adding the run itself
                 while (pos < md.Length)
                 {
@@ -129,9 +129,9 @@ namespace MarkdownToOpenXML
                         run = new Run();
                         RunProperties rPr = new RunProperties();
 
-                        Bold.SetFlagFor(pos-1);
-                        Italic.SetFlagFor(pos-1);
-                        Underline.SetFlagFor(pos-1);
+                        Bold.SetFlagFor(pos - 1);
+                        Italic.SetFlagFor(pos - 1);
+                        Underline.SetFlagFor(pos - 1);
 
                         if (Bold.Flag)
                         {
@@ -158,7 +158,7 @@ namespace MarkdownToOpenXML
                         {
                             run.Append(new TabChar());
                         }
-                        
+
                         para.Append(run);
                         buffer = "";
                     }

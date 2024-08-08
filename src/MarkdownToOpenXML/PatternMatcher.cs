@@ -12,14 +12,14 @@ namespace MarkdownToOpenXML
         public Regex regex;
         public Ranges<int> matches = new Ranges<int>();
         public bool Flag = false;
-        
+
         public enum Pattern
         {
             DblAsterisk, Asterisk, Grave, Underscore, Tab, Hyperlink_Text, Hyperlink
         }
 
         private Pattern pattern;
-        
+
         private static Dictionary<Pattern, Regex> Patterns = new Dictionary<Pattern, Regex>()
         {
             { Pattern.DblAsterisk, new Regex("(?<!\\*)(\\*\\*)([^\\ +].+?)(\\*\\*)") },
@@ -39,11 +39,11 @@ namespace MarkdownToOpenXML
 
         public void FindMatches(string md, ref Ranges<int> Tokens)
         {
-            if (pattern == Pattern.DblAsterisk || pattern == Pattern.Asterisk || pattern == Pattern.Grave || pattern == Pattern.Underscore )
+            if (pattern == Pattern.DblAsterisk || pattern == Pattern.Asterisk || pattern == Pattern.Grave || pattern == Pattern.Underscore)
             {
                 MatchCollection mc = regex.Matches(md);
                 int num = 0;
-                
+
                 foreach (Match m in mc)
                 {
                     num++;
