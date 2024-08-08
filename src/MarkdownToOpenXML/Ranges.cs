@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MarkdownToOpenXML
+namespace MarkdownToOpenXML;
+
+public class Ranges<T> where T : IComparable<T>
 {
-    public class Ranges<T> where T : IComparable<T>
+    private readonly List<Range<T>> rangelist = new List<Range<T>>();
+
+    public void add(Range<T> range)
     {
-        private readonly List<Range<T>> rangelist = new List<Range<T>>();
+        rangelist.Add(range);
+    }
 
-        public void add(Range<T> range)
-        {
-            rangelist.Add(range);
-        }
+    public int Count()
+    {
+        return rangelist.Count;
+    }
 
-        public int Count()
+    public Boolean ContainsValue(T value)
+    {
+        foreach (Range<T> range in rangelist)
         {
-            return rangelist.Count;
-        }
-
-        public Boolean ContainsValue(T value)
-        {
-            foreach (Range<T> range in rangelist)
+            if (range.ContainsValue(value))
             {
-                if (range.ContainsValue(value))
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 }

@@ -2,71 +2,70 @@
 
 using DocumentFormat.OpenXml.Wordprocessing;
 
-namespace MarkdownToOpenXML
+namespace MarkdownToOpenXML;
+
+public class MD2OXML
 {
-    public class MD2OXML
+    public static bool ExtendedMode = true;
+    private int lineCount;
+    private string[] lines;
+    private readonly string md;
+    private readonly string path;
+
+    private bool SkipNextLine;
+
+    public MD2OXML(string md, string path)
     {
-        public static bool ExtendedMode = true;
-        private int lineCount;
-        private string[] lines;
-        private readonly string md;
-        private readonly string path;
+        this.md = md;
+        this.path = path;
+    }
 
-        private bool SkipNextLine;
+    public static void CreateDocX(string md, string path)
+    {
+        MD2OXML inst = new MD2OXML(md, path);
+        inst.run();
+    }
 
-        public MD2OXML(string md, string path)
-        {
-            this.md = md;
-            this.path = path;
-        }
+    public void run()
+    {
+        Body body = new Body();
+        int index = 0;
 
-        public static void CreateDocX(string md, string path)
-        {
-            MD2OXML inst = new MD2OXML(md, path);
-            inst.run();
-        }
-
-        public void run()
-        {
-            Body body = new Body();
-            int index = 0;
-
-            lines = md.Split(
-                new[]
-                {
+        lines = md.Split(
+            new[]
+            {
                     "\r\n",
                     "\n"
-                },
-                StringSplitOptions.None);
-            lineCount = lines.Length;
+            },
+            StringSplitOptions.None);
+        lineCount = lines.Length;
 
-            foreach (string line in lines)
+        foreach (string line in lines)
+        {
+            if (SkipNextLine)
             {
-                if (SkipNextLine)
-                {
-                    index += 1;
-                    SkipNextLine = !SkipNextLine;
-                    continue;
-                }
-
-                ParagraphBuilder paragraph = new ParagraphBuilder(line, GetLine(index + 1));
-                SkipNextLine = paragraph.SkipNextLine;
-                body.Append(paragraph.Build());
                 index += 1;
+                SkipNextLine = !SkipNextLine;
+                continue;
             }
 
-            DocumentBuilder file = new DocumentBuilder(body);
-            file.SaveTo(path);
+            ParagraphBuilder paragraph = new ParagraphBuilder(line, GetLine(index + 1));
+            SkipNextLine = paragraph.SkipNextLine;
+            body.Append(paragraph.Build());
+            index += 1;
         }
 
-        private string GetLine(int n)
-        {
-            return inRange(n) ? lines[n] : "";
-        }
+        DocumentBuilder file = new DocumentBuilder(body);
+        file.SaveTo(path);
+    }
 
-        private bool inRange(int n)
-        {
-            return n >= 0 && n < lineCount;
-        }
+    private string GetLine(int n)
+    {
+        return inRange(n) ? lines[n] : "";
+    }
+
+    private bool inRange(int n)
+    {
+        return n >= 0 && n < lineCount;
     }
 }
